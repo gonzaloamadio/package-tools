@@ -10,12 +10,12 @@ pip install pre-commit==2.12.1
 
 ## Create config files
 
-Copy this files to the root of your project. 
+Copy this files to the root of your project.
 Change parameters as desired. Be aware to put in every file the sime line-length.
 
 This file: *pyproject.toml*, will configure black formatter.
 
-This file: *setup.cfg*, will configure flake, pylint, isort in a way that they are compatible with black formatter. 
+This file: *setup.cfg*, will configure flake, pylint, isort in a way that they are compatible with black formatter.
 
 This file: *.pre-commit-config.yaml*, will configure pre-commit package. And will determine with hooks will run before a commit. Add, remove hooks as desired. All hooks available are listed in the hooks link provided further down in this file.
 
@@ -84,7 +84,7 @@ import os
 def foo():
     var = 1
     print(
-            "Hello" 
+            "Hello"
                 "World"
                )
 
@@ -111,4 +111,101 @@ def foo():
 ./myPackage/example-error.py:1:1: F401 'os' imported but unused
 ./myPackage/example-error.py:5:5: F841 local variable 'var' is assigned to but never used
 ./myPackage/example-error.py:9:120: E501 line too long (158 > 119 characters)
+```
+
+## Example of usage flow
+
+```
+❯ pre-commit install
+pre-commit installed at .git/hooks/pre-commit
+
+❯ cp myPackage/example-error.py.example myPackage/example-error.py
+
+❯ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   myPackage/example-error.py
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+❯ git add -A
+
+❯ git commit -m "Test pre-commmit hooks"
+[INFO] Initializing environment for https://github.com/pre-commit/pre-commit-hooks.
+[INFO] Initializing environment for https://github.com/psf/black.
+[INFO] Initializing environment for https://gitlab.com/PyCQA/flake8.
+[INFO] Installing environment for https://github.com/pre-commit/pre-commit-hooks.
+[INFO] Once installed this environment will be reused.
+[INFO] This may take a few minutes...
+[INFO] Installing environment for https://github.com/psf/black.
+[INFO] Once installed this environment will be reused.
+[INFO] This may take a few minutes...
+[INFO] Installing environment for https://gitlab.com/PyCQA/flake8.
+[INFO] Once installed this environment will be reused.
+[INFO] This may take a few minutes...
+Check Yaml...........................................(no files to check)Skipped
+Fix End of Files.........................................................Passed
+Trim Trailing Whitespace.................................................Failed
+- hook id: trailing-whitespace
+- exit code: 1
+- files were modified by this hook
+
+Fixing myPackage/example-error.py
+
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+
+reformatted myPackage/example-error.py
+All done! ✨ 🍰 ✨
+1 file reformatted.
+
+flake8...................................................................Failed
+- hook id: flake8
+- exit code: 1
+
+myPackage/example-error.py:1:1: F401 'os' imported but unused
+myPackage/example-error.py:5:5: F841 local variable 'var' is assigned to but never used
+myPackage/example-error.py:9:120: E501 line too long (158 > 119 characters)
+
+❯ git add -A
+❯ git commit -m "Test pre-commmit hooks"
+Check Yaml...........................................(no files to check)Skipped
+Fix End of Files.....................................(no files to check)Skipped
+Trim Trailing Whitespace.............................(no files to check)Skipped
+black................................................(no files to check)Skipped
+flake8...............................................(no files to check)Skipped
+On branch master
+nothing to commit, working tree clean
+
+❯ cp myPackage/example-error.py.example myPackage/example-error.py
+
+❯ git add -A
+❯ git commit -m "Test pre-commmit hooks"
+Check Yaml...........................................(no files to check)Skipped
+Fix End of Files.........................................................Passed
+Trim Trailing Whitespace.................................................Failed
+- hook id: trailing-whitespace
+- exit code: 1
+- files were modified by this hook
+
+Fixing myPackage/example-error.py
+
+black....................................................................Failed
+- hook id: black
+- files were modified by this hook
+
+reformatted myPackage/example-error.py
+All done! ✨ 🍰 ✨
+1 file reformatted.
+
+flake8...................................................................Failed
+- hook id: flake8
+- exit code: 1
+
+myPackage/example-error.py:1:1: F401 'os' imported but unused
+myPackage/example-error.py:5:5: F841 local variable 'var' is assigned to but never used
+myPackage/example-error.py:9:120: E501 line too long (158 > 119 characters)
 ```
