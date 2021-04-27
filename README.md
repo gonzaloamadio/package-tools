@@ -1,5 +1,12 @@
 # Add tools for syntax and style checkers (refernces at the end of this file)
 
+This repo gives you a ready to use set of tools and commands useful for a project. For now, python/django.
+
+You will find: 
+* syntax formatting and checking with black, flake, isort.
+* Security checks with safety and bandit.
+* Installable git hooks with pre-commit package and the posibility to make our custom hooks and install them.
+
 ## Easy way of using this repo
 
 Copy this files and folder as they are in the root of your project.
@@ -23,7 +30,8 @@ pip install pre-commit==2.12.1
 pip install safety==1.10.3
 pip install bandit==1.7.0
 pip install safety==1.10.3
-pip install bandit==1.7.0
+pip install coverage==5.2.1
+pip install isort==5.4.2
 ```
 
 ### Create config files
