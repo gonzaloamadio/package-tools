@@ -8,7 +8,7 @@ Execute ```make help``` to see available make targets.
 
 Create venv and install packages: ```make install-venv```
 
-Install hooks (see detaile in Hooks section of this readme): ```pre-commit install```
+Install hooks (see details in Hooks section of this readme): ```pre-commit install```
 
 ## Install packages
 
