@@ -6,6 +6,8 @@ Copy this files and folder as they are in the root of your project.
 
 Execute ```make help``` to see available make targets.
 
+Create venv and install packages: ```make install-venv```
+
 Install hooks (see detaile in Hooks section of this readme): ```pre-commit install```
 
 ## Install packages
