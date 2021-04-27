@@ -1,11 +1,25 @@
 # Add tools for syntax and style checkers (refernces at the end of this file)
 
+## Easy way of using this repo
+
+Copy this files and folder as they are in the root of your project.
+
+Execute ```make help``` to see available make targets.
+
+Install hooks (see detaile in Hooks section of this readme): ```pre-commit install```
+
 ## Install packages
+
+This should be added to requirements_dev.txt
 
 ```
 pip install black
 pip install flake8==3.9.1
 pip install pre-commit==2.12.1
+pip install safety==1.10.3
+pip install bandit==1.7.0
+pip install safety==1.10.3
+pip install bandit==1.7.0
 ```
 
 ## Create config files
@@ -19,8 +33,9 @@ This file: *setup.cfg*, will configure flake, pylint, isort in a way that they a
 
 This file: *.pre-commit-config.yaml*, will configure pre-commit package. And will determine with hooks will run before a commit. Add, remove hooks as desired. All hooks available are listed in the hooks link provided further down in this file.
 
+## Hooks
 
-## Configure pre-commit and install hooks
+### Configure pre-commit and install hooks
 
 We should have the pre-commit config file (.pre-commit-config.yml)
 There are a lot of hooks that can be configured. All hooks available to run : https://pre-commit.com/hooks.html
@@ -55,7 +70,7 @@ Add to gitlab-ci
 https://pre-commit.com/#gitlab-ci-example
 
 
-## Frontend hooks
+### Frontend hooks
 
 TODO: Improve this section
 
@@ -63,7 +78,7 @@ See husky
 https://prettier.io/docs/en/precommit.html
 
 
-## Run commands manually to see results
+### Run commands manually to see results
 
 ```
 ❯ cp myPackage/example-error.py.example myPackage/example-error.py

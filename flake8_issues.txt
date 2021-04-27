@@ -1,0 +1,12 @@
+package-tools/example-error.py:1:1: F401 'os' imported but unused
+import os
+^
+package-tools/example-error.py:5:5: F841 local variable 'var' is assigned to but never used
+    var = 1
+    ^
+package-tools/example-error.py:9:120: E501 line too long (158 > 119 characters)
+        "veeeeeeeeeeeer looonnggg lineeeeeee   e  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                                                                                                                       ^
+1     E501 line too long (158 > 119 characters)
+1     F401 'os' imported but unused
+1     F841 local variable 'var' is assigned to but never used

@@ -1,0 +1,106 @@
+export SOURCE_DIR ?= UNKNOWN # Defined in Makefile in the root dir
+export FLAKE8_TARGET ?= $(SOURCE_DIR) tests/
+export FLAKE8_THRESHOLD ?= 380
+export COVERAGE_THRESHOLD ?= 83
+export TEST_REPORT_FILE_NAME ?= tests.xml
+export COVERAGE_PRINT_CONSOLE_REPORT ?= 1
+export COVERAGE_OPEN_REPORT_BROWSER ?= 1
+
+export MAKE_BASE_DIR ?= $(CURDIR)/make_base
+export MAKE_BASE_HOOKS_DIR ?= $(MAKE_BASE_DIR)/hooks
+export HOOK_STEP_COMMAND ?= python $(MAKE_BASE_HOOKS_DIR)/add_step_to_hook.py
+
+export SECURITY_CHECKS_VENV_PY3 ?= make_base/security-checks-venv-py3
+
+export PATH := $(PATH):$(MAKE_BASE_DIR)
+
+export VENV ?= ~/.virtualenvs/test-virtualenv
+export VENV_GENERATOR ?= python3 -m venv
+export USE_DEV_REQUIREMENTS ?= 0
+
+# --------------------------------------------------------- #
+#                     HELP COMMANDS
+# --------------------------------------------------------- #
+
+
+help: ## Print this message and exit
+	@python $(MAKE_BASE_DIR)/makefile_help.py $(MAKEFILE_LIST)
+
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
+list-paths:
+	@echo $(mkfile_path)  # /pth/to/repo/make_base/Makefile.base
+	@echo $(current_dir)  # make_base
+	@echo $(shell pwd)    # /path/to/repo
+	@echo $(MAKE_BASE_DIR) # /path/to/repo/make_base
+	@echo $(MAKEFILE_LIST) # Makefile make_base/Makefile.base
+	@echo $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST)))) /path/to/repo
+
+# --------------------------------------------------------- #
+#                       MANAGING
+# --------------------------------------------------------- #
+
+# Create a new virtualenv in case we do not have one (useful for docker)
+
+install-venv: create-venv ## Creates the virtualenv that will be used for tests and install reqs
+	. $(VENV)/bin/activate && $(MAKE) init-venv;
+	@echo
+	@echo "Activate this venv executing the following command"
+	@echo
+	@echo ". $(VENV)/bin/activate"
+
+create-venv: ## Create venv if it doesn't exist
+	test -d $(VENV) || $(VENV_GENERATOR) $(VENV)
+
+init-venv:  ## Install packages in current venv
+	test_venv_init.sh
+
+clean-venv: ## Delete virtualenv created: VENV variable
+	rm -rf $(VENV)
+
+default-test-deps: create-venv clean-test ## Dependencies for target repo-test
+
+clean-test: ## Remove test and coverage artifacts
+	rm -f $(TEST_REPORT_FILE_NAME) || true
+	rm -f flake8_issues.txt || true
+	rm -rf .coverage htmlcov coverage.xml || true
+	rm -rf coverage_html_report || true
+
+clean-python-build: ## Remove python build artifacts
+	rm -fr build/ || true
+	rm -fr dist/ || true
+	rm -fr .eggs/ || true
+	rm -fr *.egg-info/ || true
+
+clean-pyc: ## Remove Python file artifacts
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -fr {} +
+
+clean: clean-python-build clean-pyc clean-test clean-venv ## Remove all build, test, coverage and Python artifacts
+
+# --------------------------------------------------------- #
+#                        COMMANDS
+# --------------------------------------------------------- #
+
+repo-test: default-test-deps ## Run tests coverage and flake8
+	repo_test.sh
+
+check-security:
+	.$(MAKE_BASE_DIR)/run_bandit_checks.sh
+	.$(MAKE_BASE_DIR)/run_safety_checks.sh
+
+flake8: ## Run flake8 in current env
+	@rm -rf flake8_issues.txt
+	@$(MAKE_BASE_DIR)/run_flake8.sh
+
+coverage-django: ## Run coverage with django test suite
+	rm -rf .coverage htmlcov coverage.xml
+	@$(MAKE_BASE_DIR)/run_coverage_django.sh
+
+
+.PHONY: create-venv init-venv clean-venv install-venv
+.PHONY: flake8 coverage docs
+.PHONY: clean-test clean-pyc clean-python-build clean-debian clean-test-venv clean
+.PHONY: help add_hook_step reset_hooks install_issue_id_commit_hook
