@@ -5,6 +5,7 @@ export COVERAGE_THRESHOLD ?= 83
 export TEST_REPORT_FILE_NAME ?= tests.xml
 export COVERAGE_PRINT_CONSOLE_REPORT ?= 1
 export COVERAGE_OPEN_REPORT_BROWSER ?= 1
+export UNITTEST_COVERAGE_PARAMETERS ?= --skip-covered --skip-empty
 
 export MAKE_BASE_DIR ?= $(CURDIR)/make_base
 export MAKE_BASE_HOOKS_DIR ?= $(MAKE_BASE_DIR)/hooks
@@ -37,13 +38,13 @@ list-paths:
 	@echo $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST)))) /path/to/repo
 
 # --------------------------------------------------------- #
-#                       MANAGING
+#                       MANAGING 
 # --------------------------------------------------------- #
 
 # Create a new virtualenv in case we do not have one (useful for docker)
 
-install-venv: create-venv ## Creates the virtualenv that will be used for tests and install reqs
-	. $(VENV)/bin/activate && $(MAKE) init-venv;
+install-virtualenv: create-venv ## Creates the virtualenv that will be used for tests and install reqs
+	. $(VENV)/bin/activate && $(MAKE) init-virtualenv;
 	@echo
 	@echo "Activate this venv executing the following command"
 	@echo
@@ -52,13 +53,13 @@ install-venv: create-venv ## Creates the virtualenv that will be used for tests 
 create-venv: ## Create venv if it doesn't exist
 	test -d $(VENV) || $(VENV_GENERATOR) $(VENV)
 
-init-venv:  ## Install packages in current venv
+init-virtualenv:  ## Install packages in current venv
 	test_venv_init.sh
 
 clean-venv: ## Delete virtualenv created: VENV variable
 	rm -rf $(VENV)
 
-default-test-deps: create-venv clean-test ## Dependencies for target repo-test
+default-test-deps: create-virtualenv clean-test ## Dependencies for target repo-test
 
 clean-test: ## Remove test and coverage artifacts
 	rm -f $(TEST_REPORT_FILE_NAME) || true
@@ -81,13 +82,13 @@ clean-pyc: ## Remove Python file artifacts
 clean: clean-python-build clean-pyc clean-test clean-venv ## Remove all build, test, coverage and Python artifacts
 
 # --------------------------------------------------------- #
-#                        COMMANDS
+#                        COMMANDS                 
 # --------------------------------------------------------- #
 
 repo-test: default-test-deps ## Run tests coverage and flake8
 	repo_test.sh
 
-check-security:
+check-security: 
 	.$(MAKE_BASE_DIR)/run_bandit_checks.sh
 	.$(MAKE_BASE_DIR)/run_safety_checks.sh
 
@@ -95,12 +96,40 @@ flake8: ## Run flake8 in current env
 	@rm -rf flake8_issues.txt
 	@$(MAKE_BASE_DIR)/run_flake8.sh
 
+
+coverage: ## Run coverage in current env, show results in browser
+	rm -rf .coverage htmlcov coverage.xml
+	@run_coverage.sh
+
 coverage-django: ## Run coverage with django test suite
 	rm -rf .coverage htmlcov coverage.xml
 	@$(MAKE_BASE_DIR)/run_coverage_django.sh
 
+coverage-report:
+	@coverage report --skip-covered --skip-empty || true # we want html report anyway
+	@coverage html
+	@open
 
-.PHONY: create-venv init-venv clean-venv install-venv
+
+# --------------------------------------------------------- #
+#                       HOOKS 
+# --------------------------------------------------------- #
+
+add_hook_step: ## Add extra command to hook
+	@echo 'Usage: make add_hook_step HOOK=<hook_name> HOOK_COMMAND=<path_to_custom_script>'
+	$(HOOK_STEP_COMMAND) $(HOOK) $(HOOK_COMMAND)
+
+reset_hooks: ## Delete all hooks
+	rm -rfv .git/hooks/*
+
+install_hooks: reset_hooks install_issue_id_commit_hook ## Install a predefined set of hooks
+	$(HOOK_STEP_COMMAND) pre-push make_base/hooks/run_flake8_hook.sh
+
+install_issue_id_commit_hook: ## Install just isuue-id hook
+	$(HOOK_STEP_COMMAND) commit-msg make_base/hooks/add_issue_in_message_commit_msg_hook.py
+
+
+.PHONY: create-virtualenv venv
 .PHONY: flake8 coverage docs
 .PHONY: clean-test clean-pyc clean-python-build clean-debian clean-test-venv clean
-.PHONY: help add_hook_step reset_hooks install_issue_id_commit_hook
+.PHONY: help add_hook_step reset_hooks install_issue_id_commit_hook install_hooks

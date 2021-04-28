@@ -236,3 +236,9 @@ myPackage/example-error.py:1:1: F401 'os' imported but unused
 myPackage/example-error.py:5:5: F841 local variable 'var' is assigned to but never used
 myPackage/example-error.py:9:120: E501 line too long (158 > 119 characters)
 ```
+
+## Test
+
+You can run python tests with: ```python -m unittest```,
+
+And coverage tests with: ```coverage run -m unittest```
