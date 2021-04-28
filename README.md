@@ -9,7 +9,7 @@ You will find:
 
 ## Easy way of using this repo
 
-Copy this files and folder as they are in the root of your project.
+Copy this files and folder as they are in the root of your project. Except for package_tools and tests, they are intended to tests the functionality of this repo.
 
 Execute ```make help``` to see available make targets.
 
