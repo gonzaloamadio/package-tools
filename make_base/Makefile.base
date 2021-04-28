@@ -16,8 +16,14 @@ export SECURITY_CHECKS_VENV_PY3 ?= make_base/security-checks-venv-py3
 export PATH := $(PATH):$(MAKE_BASE_DIR)
 
 export VENV ?= ~/.virtualenvs/test-virtualenv
+export VENV_ACTIVATE ?= $(VENV)/bin/activate
 export VENV_GENERATOR ?= python3 -m venv
 export USE_DEV_REQUIREMENTS ?= 0
+
+export GREEN='\033[0;32m'
+export RED='\033[0;31m'
+export YELLOW='\033[1;33m'
+export NC='\033[0m' # No Color
 
 # --------------------------------------------------------- #
 #                     HELP COMMANDS
@@ -43,23 +49,23 @@ list-paths:
 
 # Create a new virtualenv in case we do not have one (useful for docker)
 
-install-virtualenv: create-venv ## Creates the virtualenv that will be used for tests and install reqs
-	. $(VENV)/bin/activate && $(MAKE) init-virtualenv;
+install-venv: create-venv ## Creates the virtualenv that will be used for tests and install reqs
+	. $(VENV_ACTIVATE) && $(MAKE) init-venv;
 	@echo
-	@echo "Activate this venv executing the following command"
-	@echo
+	@echo "${GREEN}Activate this venv executing the following command${NC}"
 	@echo ". $(VENV)/bin/activate"
+	@echo
 
 create-venv: ## Create venv if it doesn't exist
 	test -d $(VENV) || $(VENV_GENERATOR) $(VENV)
 
-init-virtualenv:  ## Install packages in current venv
+init-venv:  ## Install packages in current venv
 	test_venv_init.sh
 
 clean-venv: ## Delete virtualenv created: VENV variable
 	rm -rf $(VENV)
 
-default-test-deps: create-virtualenv clean-test ## Dependencies for target repo-test
+default-test-deps: install-venv clean-test ## Dependencies for target repo-test
 
 clean-test: ## Remove test and coverage artifacts
 	rm -f $(TEST_REPORT_FILE_NAME) || true
@@ -85,21 +91,30 @@ clean: clean-python-build clean-pyc clean-test clean-venv ## Remove all build, t
 #                        COMMANDS                 
 # --------------------------------------------------------- #
 
-repo-test: default-test-deps ## Run tests coverage and flake8
-	repo_test.sh
+# Difference of commands with -ci at the end, is that we create venvs always.
+# Useful for exampele to run in CI or docker containers.
+
+
+test-ci: default-test-deps ## Run tests coverage and flake8 (creating venv)
+	@. $(VENV_ACTIVATE) && $(MAKE_BASE_DIR)/repo_test.sh
+
+test: ## Run tests coverage and flake8
+	printf "Executing script make_base/repo_test.sh\n"
+	@$(MAKE_BASE_DIR)/repo_test.sh
 
 check-security: 
-	.$(MAKE_BASE_DIR)/run_bandit_checks.sh
-	.$(MAKE_BASE_DIR)/run_safety_checks.sh
+	$(MAKE_BASE_DIR)/run_bandit_checks.sh
+	$(MAKE_BASE_DIR)/run_safety_checks.sh
 
 flake8: ## Run flake8 in current env
 	@rm -rf flake8_issues.txt
 	@$(MAKE_BASE_DIR)/run_flake8.sh
 
 
-coverage: ## Run coverage in current env, show results in browser
+# coverage: default-test-deps ## Run coverage in current env, show results in browser
+coverage: 
 	rm -rf .coverage htmlcov coverage.xml
-	@run_coverage.sh
+	. $(VENV_ACTIVATE) && $(MAKE_BASE_DIR)/run_coverage_unittest.sh
 
 coverage-django: ## Run coverage with django test suite
 	rm -rf .coverage htmlcov coverage.xml
@@ -129,7 +144,7 @@ install_issue_id_commit_hook: ## Install just isuue-id hook
 	$(HOOK_STEP_COMMAND) commit-msg make_base/hooks/add_issue_in_message_commit_msg_hook.py
 
 
-.PHONY: create-virtualenv venv
+.PHONY: create-venv venv
 .PHONY: flake8 coverage docs
 .PHONY: clean-test clean-pyc clean-python-build clean-debian clean-test-venv clean
 .PHONY: help add_hook_step reset_hooks install_issue_id_commit_hook install_hooks

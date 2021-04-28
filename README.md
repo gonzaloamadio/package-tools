@@ -7,6 +7,14 @@ You will find:
 * Security checks with safety and bandit.
 * Installable git hooks with pre-commit package and the posibility to make our custom hooks and install them.
 
+
+## TODO
+
+* Improve coverage scripts (more checks inside script with thresholds?)
+* Test bandit and safety scripts
+* Test custom hooks
+* Final overall testing
+
 ## Easy way of using this repo
 
 Copy this files and folder as they are in the root of your project. Except for package_tools and tests, they are intended to tests the functionality of this repo.
@@ -242,3 +250,9 @@ myPackage/example-error.py:9:120: E501 line too long (158 > 119 characters)
 You can run python tests with: ```python -m unittest```,
 
 And coverage tests with: ```coverage run -m unittest```
+
+Reports:
+* To stdout : ```coverage report```
+* Html report: ```coverage html; open htmlcov/index.html```
+
+

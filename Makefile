@@ -5,7 +5,7 @@
 export SHELL=/bin/zsh
 
 COVERAGE_THRESHOLD = 85
-FLAKE8_THRESHOLD = 0
+FLAKE8_THRESHOLD = 10
 
 # SOURCE_DIR = # Fill with repo name
 SOURCE_DIR = package-tools

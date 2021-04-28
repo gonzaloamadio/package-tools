@@ -7,3 +7,6 @@ coverage.xml
 
 __pycache__
 
+flake8_issues.txt
+
+test-virtualenv

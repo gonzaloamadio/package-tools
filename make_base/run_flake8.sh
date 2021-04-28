@@ -12,7 +12,7 @@ if [ -z "$FLAKE8_THRESHOLD" ]; then
 	FLAKE8_THRESHOLD=0
 fi
 
-FLAKE8_FAIL_MSG="\033[31m[FAIL] Flake8 found $FLAKE8_ISSUES issues. It is above threshold of $FLAKE8_THRESHOLD Issues.\033[0m"
+FLAKE8_FAIL_MSG="${RED}[FAIL] Flake8 found $FLAKE8_ISSUES issues. It is above threshold of $FLAKE8_THRESHOLD Issues.${NC}"
 FLAKE8_FAIL_MSG_EX="$FLAKE8_FAIL_MSG Check flake8_issues.txt for more information"
 
 if [ $FLAKE8_ISSUES -gt $FLAKE8_THRESHOLD ]
