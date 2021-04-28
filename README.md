@@ -1,18 +1,27 @@
 # Add tools for syntax and style checkers (refernces at the end of this file)
 
+This repo gives you a ready to use set of tools and commands useful for a project. For now, python/django.
+
+You will find: 
+* syntax formatting and checking with black, flake, isort.
+* Security checks with safety and bandit.
+* Installable git hooks with pre-commit package and the posibility to make our custom hooks and install them.
+
 ## Easy way of using this repo
 
-Copy this files and folder as they are in the root of your project.
+Copy this files and folder as they are in the root of your project. Except for package_tools and tests, they are intended to tests the functionality of this repo.
 
 Execute ```make help``` to see available make targets.
 
 Create venv and install packages: ```make install-venv```
 
-Install hooks (see detaile in Hooks section of this readme): ```pre-commit install```
+Install hooks (see details in Hooks section of this readme): ```pre-commit install```
 
-## Install packages
+## Hard way
 
-This should be added to requirements_dev.txt
+### Install packages
+
+Versions may be upgraded. I locked them, because I have tested with this versions.
 
 ```
 pip install black
@@ -21,13 +30,14 @@ pip install pre-commit==2.12.1
 pip install safety==1.10.3
 pip install bandit==1.7.0
 pip install safety==1.10.3
-pip install bandit==1.7.0
+pip install coverage==5.2.1
+pip install isort==5.4.2
 ```
 
-## Create config files
+### Create config files
 
 Copy this files to the root of your project.
-Change parameters as desired. Be aware to put in every file the sime line-length.
+Change parameters as desired. *Be aware to put in every file the sime line-length.*
 
 This file: *pyproject.toml*, will configure black formatter.
 
@@ -35,9 +45,9 @@ This file: *setup.cfg*, will configure flake, pylint, isort in a way that they a
 
 This file: *.pre-commit-config.yaml*, will configure pre-commit package. And will determine with hooks will run before a commit. Add, remove hooks as desired. All hooks available are listed in the hooks link provided further down in this file.
 
-## Hooks
+### Hooks
 
-### Configure pre-commit and install hooks
+#### Configure pre-commit and install hooks
 
 We should have the pre-commit config file (.pre-commit-config.yml)
 There are a lot of hooks that can be configured. All hooks available to run : https://pre-commit.com/hooks.html
@@ -72,7 +82,7 @@ Add to gitlab-ci
 https://pre-commit.com/#gitlab-ci-example
 
 
-### Frontend hooks
+#### Frontend hooks
 
 TODO: Improve this section
 
@@ -80,7 +90,7 @@ See husky
 https://prettier.io/docs/en/precommit.html
 
 
-### Run commands manually to see results
+#### Run commands manually to see results
 
 ```
 ❯ cp myPackage/example-error.py.example myPackage/example-error.py
@@ -130,7 +140,7 @@ def foo():
 ./myPackage/example-error.py:9:120: E501 line too long (158 > 119 characters)
 ```
 
-## Example of usage flow
+### Example of hooks usage flow
 
 ```
 ❯ pre-commit install
