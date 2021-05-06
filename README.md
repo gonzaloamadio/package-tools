@@ -10,6 +10,8 @@ You will find:
 
 ## TODO
 
+* Add https://mypy.readthedocs.io/en/stable/
+* Check more packages used in cookiecutter and cookiecutter django (poetry for example)
 * Improve coverage scripts (more checks inside script with thresholds?)
 * Test bandit and safety scripts
 * Test custom hooks
