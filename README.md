@@ -14,6 +14,10 @@ You will find black formatter config and relevant resources inside pyproject.tml
 Resto of tools configurations in setup.cfg
 
 
+Useful resources:
+[Apply Black formatting without ruining your git blame](https://black.readthedocs.io/en/stable/installation_and_usage.html#migrating-your-code-style-without-ruining-git-blame)
+
+
 
 ## TODO
 
@@ -24,6 +28,7 @@ Resto of tools configurations in setup.cfg
 * Test bandit and safety scripts
 * Test custom hooks
 * Final overall testing
+* Debate if we should use black or not ([read this](https://luminousmen.com/post/my-unpopular-opinion-about-black-code-formatter)), we can leave it in the makefile as optional.
 
 ## Easy way of using this repo
 
