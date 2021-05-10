@@ -7,12 +7,20 @@ You will find:
 * Security checks with safety and bandit.
 * Installable git hooks with pre-commit package and the posibility to make our custom hooks and install them.
 
+## Configurations
+
+You will find black formatter config and relevant resources inside pyproject.tml file.
+
+Resto of tools configurations in setup.cfg
+
+
 
 ## TODO
 
 * Add https://mypy.readthedocs.io/en/stable/
 * Check more packages used in cookiecutter and cookiecutter django (poetry for example)
 * Improve coverage scripts (more checks inside script with thresholds?)
+* Improve frontend hooks
 * Test bandit and safety scripts
 * Test custom hooks
 * Final overall testing
@@ -27,7 +35,11 @@ Create venv and install packages: ```make install-venv```
 
 Install hooks (see details in Hooks section of this readme): ```pre-commit install```
 
-## Hard way
+## Hard way of using this repo
+
+### Create venv
+
+Out of scope: But you should create your virtual env to work on, and activate it.
 
 ### Install packages
 
@@ -127,7 +139,7 @@ def foo():
 
     print("veeeeeeeeeeeer looonnggg lineeeeeee   e  eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
 
-❯ black .
+❯ black -S .
 reformatted myPackage/example-error.py
 All done! ✨ 🍰 ✨
 1 file reformatted.
