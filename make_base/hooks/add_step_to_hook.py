@@ -13,15 +13,15 @@ HOOK_NAMES = [
     'pre-rebase',
     'pre-receive',
     'prepare-commit-msg',
-    'update']
+    'update',
+]
 
 
 hook_to_append = sys.argv[1]
 command = sys.argv[2]
 
 if hook_to_append not in HOOK_NAMES:
-    raise Exception('Invalid hook name {}, should be one of these: {}'.format(hook_to_append,
-                                                                              HOOK_NAMES))
+    raise Exception('Invalid hook name {}, should be one of these: {}'.format(hook_to_append, HOOK_NAMES))
 
 hook_to_append = '.git/hooks/{}'.format(hook_to_append)
 

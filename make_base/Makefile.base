@@ -1,4 +1,7 @@
 export SOURCE_DIR ?= UNKNOWN # Defined in Makefile in the root dir
+export TESTS_DIR ?= UNKNOWN # Defined in makefile
+export FORMAT_THIS_FOLDERS_WITH_BLACK_FORMATTER ?= UNKNOWN
+
 export FLAKE8_TARGET ?= $(SOURCE_DIR) tests/
 export FLAKE8_THRESHOLD ?= 380
 export COVERAGE_THRESHOLD ?= 83
@@ -92,7 +95,7 @@ clean: clean-python-build clean-pyc clean-test clean-venv ## Remove all build, t
 # --------------------------------------------------------- #
 
 # Difference of commands with -ci at the end, is that we create venvs always.
-# Useful for exampele to run in CI or docker containers.
+# Useful for example to run in CI or docker containers.
 
 
 test-ci: default-test-deps ## Run tests coverage and flake8 (creating venv)
@@ -110,6 +113,14 @@ flake8: ## Run flake8 in current env
 	@rm -rf flake8_issues.txt
 	@$(MAKE_BASE_DIR)/run_flake8.sh
 
+black-diff: ## Show black changes without applying them
+	@black -S --diff $(FORMAT_THIS_FOLDERS_WITH_BLACK_FORMATTER)
+
+black-check: ## Show black changes without applying them
+	@black -S --check $(FORMAT_THIS_FOLDERS_WITH_BLACK_FORMATTER)
+
+black: ## Show black changes without applying them
+	@black -S $(FORMAT_THIS_FOLDERS_WITH_BLACK_FORMATTER)
 
 # coverage: default-test-deps ## Run coverage in current env, show results in browser
 coverage: 

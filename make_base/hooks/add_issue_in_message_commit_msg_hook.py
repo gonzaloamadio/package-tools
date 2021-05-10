@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# adds the jira issue identifier at start of message 
+# adds the jira issue identifier at start of message
 # (uses the branch name if no identifier is found)
 # use as commit-msg
 
@@ -26,6 +26,6 @@ else:
 jira_issue_prefix += ':'
 
 if jira_issue_prefix not in content:
-	with open(msg_filepath, 'w') as f:
-	    print('.git/hooks/commit-msg: Adding prefix \'{}\' to commit msg.'.format(jira_issue_prefix))
-	    f.write('{} {}'.format(jira_issue_prefix, content))
+    with open(msg_filepath, 'w') as f:
+        print('.git/hooks/commit-msg: Adding prefix \'{}\' to commit msg.'.format(jira_issue_prefix))
+        f.write('{} {}'.format(jira_issue_prefix, content))
