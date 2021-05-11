@@ -18,7 +18,9 @@ export SECURITY_CHECKS_VENV_PY3 ?= make_base/security-checks-venv-py3
 
 export PATH := $(PATH):$(MAKE_BASE_DIR)
 
-export VENV ?= ~/.virtualenvs/test-virtualenv
+# export VENV ?= ~/.virtualenvs/test-virtualenv
+# Create venv in projects folder, better to work with containers
+export VENV ?= test-virtualenv
 export VENV_ACTIVATE ?= $(VENV)/bin/activate
 export VENV_GENERATOR ?= python3 -m venv
 export USE_DEV_REQUIREMENTS ?= 0
