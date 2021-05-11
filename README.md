@@ -22,7 +22,7 @@ Useful resources:
 ## TODO
 
 * Add https://mypy.readthedocs.io/en/stable/
-* Check more packages used in cookiecutter and cookiecutter django (poetry for example)
+* Check more packages used in cookiecutter and cookiecutter django (poetry for example) : [cookiecutter](https://github.com/pydanny/cookiecutter-django/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D)
 * Improve coverage scripts (more checks inside script with thresholds?)
 * Improve frontend hooks
 * Test bandit and safety scripts
